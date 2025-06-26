@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
@@ -24,6 +24,14 @@ const Dashboard: React.FC = () => {
       onClick: () => navigate('/websites')
     },
     {
+      id: 'todos',
+      title: 'Tasks',
+      description: 'Organize your tasks and track progress',
+      icon: CheckSquare,
+      color: 'from-green-500 to-emerald-600',
+      onClick: () => navigate('/todos')
+    },
+    {
       id: 'placeholder1',
       title: 'Tool Slot',
       description: 'Available for custom tools',
@@ -41,14 +49,6 @@ const Dashboard: React.FC = () => {
     },
     {
       id: 'placeholder3',
-      title: 'Tool Slot',
-      description: 'Available for custom tools',
-      icon: Plus,
-      color: 'from-slate-500 to-slate-600',
-      onClick: () => {}
-    },
-    {
-      id: 'placeholder4',
       title: 'Tool Slot',
       description: 'Available for custom tools',
       icon: Plus,

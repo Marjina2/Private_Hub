@@ -6,6 +6,7 @@ import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 import NotesApp from './components/NotesApp';
 import WebsitesApp from './components/WebsitesApp';
+import TodosApp from './components/TodosApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
@@ -20,6 +21,7 @@ function AppRoutes() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/notes" element={<NotesApp />} />
       <Route path="/websites" element={<WebsitesApp />} />
+      <Route path="/todos" element={<TodosApp />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
