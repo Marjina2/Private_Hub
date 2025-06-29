@@ -34,3 +34,43 @@
 .scrollbar-thumb-slate-600::-webkit-scrollbar-thumb:hover {
   background: #64748b;
 }
+
+/* Fix for white scrollbar areas */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #1e293b;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+*::-webkit-scrollbar-corner {
+  background: #1e293b;
+}
+
+/* Ensure no white backgrounds on scroll areas */
+html, body {
+  background-color: #0f172a;
+  overflow-x: hidden;
+}
+
+/* Fix any potential white backgrounds */
+div, section, article, main {
+  background-color: transparent;
+}
