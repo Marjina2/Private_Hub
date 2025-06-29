@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import type { User } from '@supabase/supabase-js';
 
 interface AuthContextType {
+  user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (token: string) => Promise<boolean>;
   loginWithCredentials: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -12,7 +16,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const MASTER_TOKEN = '5419810';
 const ALTERNATE_EMAIL = 'mazidarr2@gmail.com';
 const ALTERNATE_PASSWORD = 'mazidarr2@12345';
-const AUTH_KEY = 'private_hub_auth';
 
 const TELEGRAM_BOT_TOKEN = '7414299359:AAE0YF_qq-IBjcVox2bKHqxc0IIJTCDgoE8';
 const TELEGRAM_CHAT_ID = '-1002723863147';
@@ -57,32 +60,54 @@ const formatDateTime = () => {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already authenticated
-    const savedAuth = localStorage.getItem(AUTH_KEY);
-    if (savedAuth === 'true') {
-      setIsAuthenticated(true);
-    }
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (token: string): Promise<boolean> => {
     const { date, time } = formatDateTime();
     
     if (token === MASTER_TOKEN) {
-      setIsAuthenticated(true);
-      localStorage.setItem(AUTH_KEY, 'true');
-      
-      // Log successful login
-      const message = `🔐 <b>Private Hub - Login Success</b>\n\n` +
-                     `📅 <b>Date:</b> ${date}\n` +
-                     `⏰ <b>Time:</b> ${time}\n` +
-                     `🔑 <b>Method:</b> Master Token\n` +
-                     `✅ <b>Status:</b> Access Granted`;
-      
-      await sendTelegramLog(message);
-      return true;
+      try {
+        // Sign in with Supabase using the alternate credentials
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: ALTERNATE_EMAIL,
+          password: ALTERNATE_PASSWORD,
+        });
+
+        if (error) {
+          console.error('Supabase auth error:', error);
+          return false;
+        }
+
+        // Log successful login
+        const message = `🔐 <b>Private Hub - Login Success</b>\n\n` +
+                       `📅 <b>Date:</b> ${date}\n` +
+                       `⏰ <b>Time:</b> ${time}\n` +
+                       `🔑 <b>Method:</b> Master Token\n` +
+                       `✅ <b>Status:</b> Access Granted`;
+        
+        await sendTelegramLog(message);
+        return true;
+      } catch (error) {
+        console.error('Login error:', error);
+        return false;
+      }
     } else {
       // Log failed login attempt
       const message = `🚨 <b>Private Hub - Login Failed</b>\n\n` +
@@ -101,19 +126,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { date, time } = formatDateTime();
     
     if (email === ALTERNATE_EMAIL && password === ALTERNATE_PASSWORD) {
-      setIsAuthenticated(true);
-      localStorage.setItem(AUTH_KEY, 'true');
-      
-      // Log successful login
-      const message = `🔐 <b>Private Hub - Login Success</b>\n\n` +
-                     `📅 <b>Date:</b> ${date}\n` +
-                     `⏰ <b>Time:</b> ${time}\n` +
-                     `🔑 <b>Method:</b> Email/Password\n` +
-                     `📧 <b>Email:</b> ${email}\n` +
-                     `✅ <b>Status:</b> Access Granted`;
-      
-      await sendTelegramLog(message);
-      return true;
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          console.error('Supabase auth error:', error);
+          return false;
+        }
+
+        // Log successful login
+        const message = `🔐 <b>Private Hub - Login Success</b>\n\n` +
+                       `📅 <b>Date:</b> ${date}\n` +
+                       `⏰ <b>Time:</b> ${time}\n` +
+                       `🔑 <b>Method:</b> Email/Password\n` +
+                       `📧 <b>Email:</b> ${email}\n` +
+                       `✅ <b>Status:</b> Access Granted`;
+        
+        await sendTelegramLog(message);
+        return true;
+      } catch (error) {
+        console.error('Login error:', error);
+        return false;
+      }
     } else {
       // Log failed login attempt
       const message = `🚨 <b>Private Hub - Login Failed</b>\n\n` +
@@ -132,8 +169,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     const { date, time } = formatDateTime();
     
-    setIsAuthenticated(false);
-    localStorage.removeItem(AUTH_KEY);
+    await supabase.auth.signOut();
     
     // Log logout
     const message = `🚪 <b>Private Hub - Logout</b>\n\n` +
@@ -144,8 +180,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await sendTelegramLog(message);
   };
 
+  const value = {
+    user,
+    isAuthenticated: !!user,
+    isLoading,
+    login,
+    loginWithCredentials,
+    logout
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, loginWithCredentials, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
