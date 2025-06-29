@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Search, Edit3, Trash2, Save, X, Users, Phone, Mail, MapPin, User, Calendar, Building, Globe, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Plus, Search, Edit3, Trash2, Save, X, Users, Phone, Mail, MapPin, User, Calendar, Building, Globe, MessageCircle, Hash, Instagram } from 'lucide-react';
 import Header from './Header';
 
 interface Contact {
@@ -13,6 +13,10 @@ interface Contact {
   company: string;
   jobTitle: string;
   website: string;
+  discordId: string;
+  discordLink: string;
+  instagramId: string;
+  instagramLink: string;
   notes: string;
   createdAt: Date;
   updatedAt: Date;
@@ -55,6 +59,10 @@ const ContactsApp: React.FC = () => {
       company: '',
       jobTitle: '',
       website: '',
+      discordId: '',
+      discordLink: '',
+      instagramId: '',
+      instagramLink: '',
       notes: '',
       createdAt: new Date(),
       updatedAt: new Date()
@@ -81,6 +89,10 @@ const ContactsApp: React.FC = () => {
       company: editingContact.company || '',
       jobTitle: editingContact.jobTitle || '',
       website: editingContact.website || '',
+      discordId: editingContact.discordId || '',
+      discordLink: editingContact.discordLink || '',
+      instagramId: editingContact.instagramId || '',
+      instagramLink: editingContact.instagramLink || '',
       notes: editingContact.notes || '',
       createdAt: editingContact.createdAt || new Date(),
       updatedAt: new Date()
@@ -120,7 +132,9 @@ const ContactsApp: React.FC = () => {
            contact.email.toLowerCase().includes(searchLower) ||
            contact.phone.includes(searchTerm) ||
            contact.company.toLowerCase().includes(searchLower) ||
-           contact.jobTitle.toLowerCase().includes(searchLower);
+           contact.jobTitle.toLowerCase().includes(searchLower) ||
+           contact.discordId.toLowerCase().includes(searchLower) ||
+           contact.instagramId.toLowerCase().includes(searchLower);
   });
 
   const formatDate = (date: Date) => {
@@ -141,7 +155,7 @@ const ContactsApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-900">
       <Header />
       
       <div className="container mx-auto px-4 py-6">
@@ -179,7 +193,7 @@ const ContactsApp: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-18rem)]">
           {/* Contacts List */}
-          <div className="lg:col-span-1 backdrop-blur-lg bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl p-4">
+          <div className="lg:col-span-1 backdrop-blur-lg bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-white">Your Contacts</h2>
               <button
@@ -197,11 +211,11 @@ const ContactsApp: React.FC = () => {
                 placeholder="Search contacts..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
-            <div className="space-y-2 max-h-[calc(100%-8rem)] overflow-y-auto">
+            <div className="space-y-2 max-h-[calc(100%-8rem)] overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600">
               {filteredContacts.map((contact) => {
                 const fullName = `${contact.firstName} ${contact.lastName}`.trim();
                 const displayName = fullName || 'Unnamed Contact';
@@ -213,7 +227,7 @@ const ContactsApp: React.FC = () => {
                     className={`p-3 rounded-lg cursor-pointer transition-colors ${
                       selectedContact?.id === contact.id
                         ? 'bg-indigo-600/30 border border-indigo-500/50'
-                        : 'bg-white/5 hover:bg-white/10'
+                        : 'bg-slate-700/30 hover:bg-slate-700/50'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -244,7 +258,7 @@ const ContactsApp: React.FC = () => {
           </div>
 
           {/* Contact Viewer/Editor */}
-          <div className="lg:col-span-2 backdrop-blur-lg bg-white/10 dark:bg-black/20 border border-white/20 rounded-2xl p-6">
+          <div className="lg:col-span-2 backdrop-blur-lg bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6">
             {isEditing ? (
               <div className="h-full flex flex-col">
                 <div className="flex items-center justify-between mb-4">
@@ -272,7 +286,7 @@ const ContactsApp: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600">
                   <div>
                     <label className="block text-sm font-medium text-slate-200 mb-2">
                       First Name
@@ -282,7 +296,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter first name..."
                       value={editingContact.firstName || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, firstName: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -295,7 +309,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter last name..."
                       value={editingContact.lastName || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, lastName: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -308,7 +322,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter email address..."
                       value={editingContact.email || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, email: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -321,7 +335,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter phone number..."
                       value={editingContact.phone || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, phone: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -334,7 +348,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter company name..."
                       value={editingContact.company || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, company: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -347,7 +361,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter job title..."
                       value={editingContact.jobTitle || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, jobTitle: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -360,7 +374,59 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter website URL..."
                       value={editingContact.website || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, website: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">
+                      Discord ID
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter Discord username..."
+                      value={editingContact.discordId || ''}
+                      onChange={(e) => setEditingContact({ ...editingContact, discordId: e.target.value })}
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">
+                      Discord Profile Link
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="Enter Discord profile URL..."
+                      value={editingContact.discordLink || ''}
+                      onChange={(e) => setEditingContact({ ...editingContact, discordLink: e.target.value })}
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">
+                      Instagram ID
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter Instagram username..."
+                      value={editingContact.instagramId || ''}
+                      onChange={(e) => setEditingContact({ ...editingContact, instagramId: e.target.value })}
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">
+                      Instagram Profile Link
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="Enter Instagram profile URL..."
+                      value={editingContact.instagramLink || ''}
+                      onChange={(e) => setEditingContact({ ...editingContact, instagramLink: e.target.value })}
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -373,7 +439,7 @@ const ContactsApp: React.FC = () => {
                       placeholder="Enter address..."
                       value={editingContact.address || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, address: e.target.value })}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
 
@@ -386,7 +452,7 @@ const ContactsApp: React.FC = () => {
                       value={editingContact.notes || ''}
                       onChange={(e) => setEditingContact({ ...editingContact, notes: e.target.value })}
                       rows={4}
-                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                     />
                   </div>
                 </div>
@@ -416,7 +482,7 @@ const ContactsApp: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto">
+                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600">
                   {/* Contact Header */}
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
@@ -444,7 +510,7 @@ const ContactsApp: React.FC = () => {
                   {/* Contact Information */}
                   <div className="space-y-4">
                     {selectedContact.email && (
-                      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
                         <Mail className="w-5 h-5 text-blue-400" />
                         <div>
                           <p className="text-sm text-slate-400">Email</p>
@@ -459,7 +525,7 @@ const ContactsApp: React.FC = () => {
                     )}
 
                     {selectedContact.phone && (
-                      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
                         <Phone className="w-5 h-5 text-green-400" />
                         <div>
                           <p className="text-sm text-slate-400">Phone</p>
@@ -474,7 +540,7 @@ const ContactsApp: React.FC = () => {
                     )}
 
                     {selectedContact.address && (
-                      <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
                         <MapPin className="w-5 h-5 text-red-400 mt-1" />
                         <div>
                           <p className="text-sm text-slate-400">Address</p>
@@ -484,7 +550,7 @@ const ContactsApp: React.FC = () => {
                     )}
 
                     {selectedContact.company && (
-                      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
                         <Building className="w-5 h-5 text-purple-400" />
                         <div>
                           <p className="text-sm text-slate-400">Company</p>
@@ -494,7 +560,7 @@ const ContactsApp: React.FC = () => {
                     )}
 
                     {selectedContact.website && (
-                      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
                         <Globe className="w-5 h-5 text-cyan-400" />
                         <div>
                           <p className="text-sm text-slate-400">Website</p>
@@ -510,8 +576,52 @@ const ContactsApp: React.FC = () => {
                       </div>
                     )}
 
+                    {selectedContact.discordId && (
+                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                        <Hash className="w-5 h-5 text-indigo-400" />
+                        <div>
+                          <p className="text-sm text-slate-400">Discord</p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-indigo-300">{selectedContact.discordId}</span>
+                            {selectedContact.discordLink && (
+                              <a
+                                href={selectedContact.discordLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-indigo-300 hover:text-indigo-200 transition-colors text-sm"
+                              >
+                                (Profile)
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedContact.instagramId && (
+                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                        <Instagram className="w-5 h-5 text-pink-400" />
+                        <div>
+                          <p className="text-sm text-slate-400">Instagram</p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-pink-300">@{selectedContact.instagramId}</span>
+                            {selectedContact.instagramLink && (
+                              <a
+                                href={selectedContact.instagramLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-pink-300 hover:text-pink-200 transition-colors text-sm"
+                              >
+                                (Profile)
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {selectedContact.notes && (
-                      <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
+                      <div className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
                         <MessageCircle className="w-5 h-5 text-yellow-400 mt-1" />
                         <div>
                           <p className="text-sm text-slate-400 mb-2">Notes</p>
@@ -523,7 +633,7 @@ const ContactsApp: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="text-xs text-slate-400 mt-6 pt-4 border-t border-white/10">
+                  <div className="text-xs text-slate-400 mt-6 pt-4 border-t border-slate-700/50">
                     Last updated: {formatDate(selectedContact.updatedAt)}
                   </div>
                 </div>
