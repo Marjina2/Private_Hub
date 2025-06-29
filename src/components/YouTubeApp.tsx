@@ -43,15 +43,45 @@ const YouTubeApp: React.FC = () => {
   };
 
   const extractVideoId = (url: string): string => {
+    // Remove any whitespace
+    url = url.trim();
+    
+    // Handle various YouTube URL formats
     const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-      /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+      // Standard watch URLs
+      /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+      // Short URLs
+      /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+      // Embed URLs
+      /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+      // Mobile URLs
+      /(?:m\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+      // URLs with additional parameters
+      /(?:youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/,
+      // Gaming URLs
+      /(?:gaming\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+      // Music URLs
+      /(?:music\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+      // Playlist URLs with video
+      /(?:youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/,
+      // Live URLs
+      /(?:youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
+      // Shorts URLs
+      /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
     ];
     
     for (const pattern of patterns) {
       const match = url.match(pattern);
-      if (match) return match[1];
+      if (match && match[1]) {
+        return match[1];
+      }
     }
+    
+    // If no pattern matches, check if it's just a video ID
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+      return url;
+    }
+    
     return '';
   };
 
@@ -80,11 +110,14 @@ const YouTubeApp: React.FC = () => {
   };
 
   const saveVideo = () => {
-    if (!editingVideo.title?.trim() || !editingVideo.url?.trim()) return;
+    if (!editingVideo.title?.trim() || !editingVideo.url?.trim()) {
+      alert('Please enter both title and YouTube URL');
+      return;
+    }
 
     const videoId = extractVideoId(editingVideo.url || '');
     if (!videoId) {
-      alert('Please enter a valid YouTube URL');
+      alert('Please enter a valid YouTube URL. Examples:\n• https://www.youtube.com/watch?v=VIDEO_ID\n• https://youtu.be/VIDEO_ID\n• https://youtube.com/shorts/VIDEO_ID');
       return;
     }
 
@@ -154,6 +187,16 @@ const YouTubeApp: React.FC = () => {
         original: "Bonjour tout le monde, dans cette vidéo nous allons découvrir les nouvelles fonctionnalités de React.",
         translated: "Hello everyone, in this video we are going to discover the new features of React.",
         language: "French"
+      },
+      {
+        original: "Привет всем, сегодня мы изучаем новые возможности JavaScript и современные фреймворки.",
+        translated: "Hello everyone, today we are studying new JavaScript capabilities and modern frameworks.",
+        language: "Russian"
+      },
+      {
+        original: "こんにちは皆さん、今日は新しいプログラミング技術について学びます。とても興味深い内容です。",
+        translated: "Hello everyone, today we will learn about new programming techniques. This is very interesting content.",
+        language: "Japanese"
       }
     ];
     
@@ -363,13 +406,16 @@ const YouTubeApp: React.FC = () => {
                     <div className="relative">
                       <Youtube className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                       <input
-                        type="url"
-                        placeholder="https://www.youtube.com/watch?v=..."
+                        type="text"
+                        placeholder="Paste any YouTube URL here..."
                         value={editingVideo.url || ''}
                         onChange={(e) => setEditingVideo({ ...editingVideo, url: e.target.value })}
                         className="w-full pl-10 pr-4 p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500"
                       />
                     </div>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Supports: youtube.com/watch, youtu.be, youtube.com/shorts, and more
+                    </p>
                   </div>
 
                   <div>
