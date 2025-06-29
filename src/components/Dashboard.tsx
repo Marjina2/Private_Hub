@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
@@ -40,20 +40,20 @@ const Dashboard: React.FC = () => {
       onClick: () => navigate('/contacts')
     },
     {
-      id: 'placeholder1',
-      title: 'Tool Slot',
-      description: 'Available for custom tools',
-      icon: Plus,
-      color: 'from-slate-500 to-slate-600',
-      onClick: () => {}
+      id: 'discord',
+      title: 'Discord',
+      description: 'Manage your Discord contacts',
+      icon: Hash,
+      color: 'from-indigo-500 to-indigo-600',
+      onClick: () => navigate('/discord')
     },
     {
-      id: 'placeholder2',
-      title: 'Tool Slot',
-      description: 'Available for custom tools',
-      icon: Plus,
-      color: 'from-slate-500 to-slate-600',
-      onClick: () => {}
+      id: 'instagram',
+      title: 'Instagram',
+      description: 'Manage your Instagram contacts',
+      icon: Instagram,
+      color: 'from-pink-500 to-pink-600',
+      onClick: () => navigate('/instagram')
     }
   ];
 

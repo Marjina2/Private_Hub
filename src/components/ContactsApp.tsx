@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Search, Edit3, Trash2, Save, X, Users, Phone, Mail, MapPin, User, Calendar, Building, Globe, MessageCircle, Hash, Instagram } from 'lucide-react';
+import { ArrowLeft, Plus, Search, Edit3, Trash2, Save, X, Users, Phone, Mail, MapPin, User, Calendar, Building, Globe, MessageCircle } from 'lucide-react';
 import Header from './Header';
 
 interface Contact {
@@ -13,10 +13,6 @@ interface Contact {
   company: string;
   jobTitle: string;
   website: string;
-  discordId: string;
-  discordLink: string;
-  instagramId: string;
-  instagramLink: string;
   notes: string;
   createdAt: Date;
   updatedAt: Date;
@@ -59,10 +55,6 @@ const ContactsApp: React.FC = () => {
       company: '',
       jobTitle: '',
       website: '',
-      discordId: '',
-      discordLink: '',
-      instagramId: '',
-      instagramLink: '',
       notes: '',
       createdAt: new Date(),
       updatedAt: new Date()
@@ -89,10 +81,6 @@ const ContactsApp: React.FC = () => {
       company: editingContact.company || '',
       jobTitle: editingContact.jobTitle || '',
       website: editingContact.website || '',
-      discordId: editingContact.discordId || '',
-      discordLink: editingContact.discordLink || '',
-      instagramId: editingContact.instagramId || '',
-      instagramLink: editingContact.instagramLink || '',
       notes: editingContact.notes || '',
       createdAt: editingContact.createdAt || new Date(),
       updatedAt: new Date()
@@ -132,9 +120,7 @@ const ContactsApp: React.FC = () => {
            contact.email.toLowerCase().includes(searchLower) ||
            contact.phone.includes(searchTerm) ||
            contact.company.toLowerCase().includes(searchLower) ||
-           contact.jobTitle.toLowerCase().includes(searchLower) ||
-           contact.discordId.toLowerCase().includes(searchLower) ||
-           contact.instagramId.toLowerCase().includes(searchLower);
+           contact.jobTitle.toLowerCase().includes(searchLower);
   });
 
   const formatDate = (date: Date) => {
@@ -378,58 +364,6 @@ const ContactsApp: React.FC = () => {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-200 mb-2">
-                      Discord ID
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Discord username..."
-                      value={editingContact.discordId || ''}
-                      onChange={(e) => setEditingContact({ ...editingContact, discordId: e.target.value })}
-                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-200 mb-2">
-                      Discord Profile Link
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="Enter Discord profile URL..."
-                      value={editingContact.discordLink || ''}
-                      onChange={(e) => setEditingContact({ ...editingContact, discordLink: e.target.value })}
-                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-200 mb-2">
-                      Instagram ID
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Instagram username..."
-                      value={editingContact.instagramId || ''}
-                      onChange={(e) => setEditingContact({ ...editingContact, instagramId: e.target.value })}
-                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-200 mb-2">
-                      Instagram Profile Link
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="Enter Instagram profile URL..."
-                      value={editingContact.instagramLink || ''}
-                      onChange={(e) => setEditingContact({ ...editingContact, instagramLink: e.target.value })}
-                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-slate-200 mb-2">
                       Address
@@ -572,50 +506,6 @@ const ContactsApp: React.FC = () => {
                           >
                             {selectedContact.website}
                           </a>
-                        </div>
-                      </div>
-                    )}
-
-                    {selectedContact.discordId && (
-                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                        <Hash className="w-5 h-5 text-indigo-400" />
-                        <div>
-                          <p className="text-sm text-slate-400">Discord</p>
-                          <div className="flex items-center gap-2">
-                            <span className="text-indigo-300">{selectedContact.discordId}</span>
-                            {selectedContact.discordLink && (
-                              <a
-                                href={selectedContact.discordLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-indigo-300 hover:text-indigo-200 transition-colors text-sm"
-                              >
-                                (Profile)
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {selectedContact.instagramId && (
-                      <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                        <Instagram className="w-5 h-5 text-pink-400" />
-                        <div>
-                          <p className="text-sm text-slate-400">Instagram</p>
-                          <div className="flex items-center gap-2">
-                            <span className="text-pink-300">@{selectedContact.instagramId}</span>
-                            {selectedContact.instagramLink && (
-                              <a
-                                href={selectedContact.instagramLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-pink-300 hover:text-pink-200 transition-colors text-sm"
-                              >
-                                (Profile)
-                              </a>
-                            )}
-                          </div>
                         </div>
                       </div>
                     )}
