@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import SecurityWrapper from './components/SecurityWrapper';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 import NotesApp from './components/NotesApp';
@@ -37,18 +38,20 @@ function AppRoutes() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
-            <DitherBackground />
-            <div className="relative z-10">
-              <AppRoutes />
+    <SecurityWrapper>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
+              <DitherBackground />
+              <div className="relative z-10">
+                <AppRoutes />
+              </div>
             </div>
-          </div>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
+    </SecurityWrapper>
   );
 }
 

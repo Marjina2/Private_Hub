@@ -2,7 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom scrollbar styles */
+/* Security: Disable text selection globally */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection only in input fields */
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Security: Disable drag and drop */
+* {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Security: Hide scrollbars to prevent inspection */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Custom scrollbar styles for dark theme */
 .scrollbar-thin {
   scrollbar-width: thin;
 }
@@ -73,4 +106,76 @@ html, body {
 /* Fix any potential white backgrounds */
 div, section, article, main {
   background-color: transparent;
+}
+
+/* Security: Disable image dragging */
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* Security: Disable highlighting */
+::selection {
+  background: transparent;
+}
+
+::-moz-selection {
+  background: transparent;
+}
+
+/* Security: Hide any potential debug info */
+.debug, .console, .inspector {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Security: Obfuscate content from screen readers used by tools */
+[aria-hidden="true"] {
+  speak: none;
+}
+
+/* Security: Prevent content extraction via CSS */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Security: Anti-screenshot protection */
+@media print {
+  * {
+    display: none !important;
+  }
+  
+  body::before {
+    content: "Printing is not allowed for security reasons.";
+    display: block !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: red;
+    z-index: 9999;
+  }
+}
+
+/* Security: Disable context menu styling */
+.context-menu-disabled {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
