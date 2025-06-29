@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
@@ -72,12 +72,12 @@ const Dashboard: React.FC = () => {
       onClick: () => navigate('/photos')
     },
     {
-      id: 'placeholder1',
-      title: 'Tool Slot',
-      description: 'Available for custom tools',
-      icon: Plus,
-      color: 'from-slate-500 to-slate-600',
-      onClick: () => {}
+      id: 'osint',
+      title: 'OSINT',
+      description: 'Open Source Intelligence gathering tools',
+      icon: Target,
+      color: 'from-red-500 to-red-600',
+      onClick: () => navigate('/osint')
     }
   ];
 
