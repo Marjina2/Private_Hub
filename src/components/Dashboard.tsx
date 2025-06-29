@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
@@ -54,6 +54,30 @@ const Dashboard: React.FC = () => {
       icon: Instagram,
       color: 'from-pink-500 to-pink-600',
       onClick: () => navigate('/instagram')
+    },
+    {
+      id: 'youtube',
+      title: 'YouTube',
+      description: 'Save important videos with transcriptions',
+      icon: Youtube,
+      color: 'from-red-500 to-red-600',
+      onClick: () => navigate('/youtube')
+    },
+    {
+      id: 'placeholder1',
+      title: 'Tool Slot',
+      description: 'Available for custom tools',
+      icon: Plus,
+      color: 'from-slate-500 to-slate-600',
+      onClick: () => {}
+    },
+    {
+      id: 'placeholder2',
+      title: 'Tool Slot',
+      description: 'Available for custom tools',
+      icon: Plus,
+      color: 'from-slate-500 to-slate-600',
+      onClick: () => {}
     }
   ];
 

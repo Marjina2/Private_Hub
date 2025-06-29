@@ -10,6 +10,7 @@ import TodosApp from './components/TodosApp';
 import ContactsApp from './components/ContactsApp';
 import DiscordApp from './components/DiscordApp';
 import InstagramApp from './components/InstagramApp';
+import YouTubeApp from './components/YouTubeApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
@@ -28,6 +29,7 @@ function AppRoutes() {
       <Route path="/contacts" element={<ContactsApp />} />
       <Route path="/discord" element={<DiscordApp />} />
       <Route path="/instagram" element={<InstagramApp />} />
+      <Route path="/youtube" element={<YouTubeApp />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
