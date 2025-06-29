@@ -12,6 +12,7 @@ import ContactsApp from './components/ContactsApp';
 import DiscordApp from './components/DiscordApp';
 import InstagramApp from './components/InstagramApp';
 import YouTubeApp from './components/YouTubeApp';
+import PhotoGalleryApp from './components/PhotoGalleryApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
@@ -31,6 +32,7 @@ function AppRoutes() {
       <Route path="/discord" element={<DiscordApp />} />
       <Route path="/instagram" element={<InstagramApp />} />
       <Route path="/youtube" element={<YouTubeApp />} />
+      <Route path="/photos" element={<PhotoGalleryApp />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
