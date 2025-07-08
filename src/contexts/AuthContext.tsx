@@ -82,9 +82,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (token: string): Promise<boolean> => {
     const { date, time } = formatDateTime();
     
+    console.log('Login attempt with token:', token);
+    console.log('Expected token:', MASTER_TOKEN);
+    
     if (token === MASTER_TOKEN) {
       try {
         console.log('Attempting Supabase login with master token...');
+        console.log('Using credentials:', ALTERNATE_EMAIL, 'password length:', ALTERNATE_PASSWORD.length);
+        
         // Sign in with Supabase using the alternate credentials
         const { data, error } = await supabase.auth.signInWithPassword({
           email: ALTERNATE_EMAIL,
@@ -147,6 +152,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithCredentials = async (email: string, password: string): Promise<boolean> => {
     const { date, time } = formatDateTime();
+    
+    console.log('Login attempt with credentials:', email, 'password length:', password.length);
+    console.log('Expected email:', ALTERNATE_EMAIL);
+    console.log('Expected password:', ALTERNATE_PASSWORD);
     
     if (email === ALTERNATE_EMAIL && password === ALTERNATE_PASSWORD) {
       try {

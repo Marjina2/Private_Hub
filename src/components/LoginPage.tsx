@@ -13,6 +13,7 @@ const LoginPage: React.FC = () => {
 
   const handleTokenSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Token submit attempt:', token);
     setIsLoading(true);
     setError('');
 
@@ -29,6 +30,7 @@ const LoginPage: React.FC = () => {
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Credentials submit attempt:', email, password);
     setIsLoading(true);
     setError('');
 
