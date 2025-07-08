@@ -84,6 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (token === MASTER_TOKEN) {
       try {
+        console.log('Attempting Supabase login with master token...');
         // Sign in with Supabase using the alternate credentials
         const { data, error } = await supabase.auth.signInWithPassword({
           email: ALTERNATE_EMAIL,
@@ -91,10 +92,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (error) {
-          console.error('Supabase auth error:', error);
+          console.error('Supabase auth error:', error.message, error);
+          
+          // Log failed login attempt with error details
+          const message = `🚨 <b>Private Hub - Login Failed (Supabase Error)</b>\n\n` +
+                         `📅 <b>Date:</b> ${date}\n` +
+                         `⏰ <b>Time:</b> ${time}\n` +
+                         `🔑 <b>Method:</b> Master Token\n` +
+                         `❌ <b>Error:</b> ${error.message}\n` +
+                         `🚫 <b>Status:</b> Supabase Connection Failed`;
+          
+          await sendTelegramLog(message);
           return false;
         }
 
+        console.log('Supabase login successful:', data);
+        
         // Log successful login
         const message = `🔐 <b>Private Hub - Login Success</b>\n\n` +
                        `📅 <b>Date:</b> ${date}\n` +
@@ -105,7 +118,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await sendTelegramLog(message);
         return true;
       } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login error (catch block):', error);
+        
+        // Log failed login attempt with catch error
+        const message = `🚨 <b>Private Hub - Login Failed (Network Error)</b>\n\n` +
+                       `📅 <b>Date:</b> ${date}\n` +
+                       `⏰ <b>Time:</b> ${time}\n` +
+                       `🔑 <b>Method:</b> Master Token\n` +
+                       `❌ <b>Error:</b> ${error instanceof Error ? error.message : 'Unknown error'}\n` +
+                       `🚫 <b>Status:</b> Network/Connection Failed`;
+        
+        await sendTelegramLog(message);
         return false;
       }
     } else {
@@ -127,16 +150,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (email === ALTERNATE_EMAIL && password === ALTERNATE_PASSWORD) {
       try {
+        console.log('Attempting Supabase login with credentials...');
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (error) {
-          console.error('Supabase auth error:', error);
+          console.error('Supabase auth error:', error.message, error);
+          
+          // Log failed login attempt with error details
+          const message = `🚨 <b>Private Hub - Login Failed (Supabase Error)</b>\n\n` +
+                         `📅 <b>Date:</b> ${date}\n` +
+                         `⏰ <b>Time:</b> ${time}\n` +
+                         `🔑 <b>Method:</b> Email/Password\n` +
+                         `📧 <b>Email:</b> ${email}\n` +
+                         `❌ <b>Error:</b> ${error.message}\n` +
+                         `🚫 <b>Status:</b> Supabase Connection Failed`;
+          
+          await sendTelegramLog(message);
           return false;
         }
 
+        console.log('Supabase login successful:', data);
+        
         // Log successful login
         const message = `🔐 <b>Private Hub - Login Success</b>\n\n` +
                        `📅 <b>Date:</b> ${date}\n` +
@@ -148,7 +185,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await sendTelegramLog(message);
         return true;
       } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login error (catch block):', error);
+        
+        // Log failed login attempt with catch error
+        const message = `🚨 <b>Private Hub - Login Failed (Network Error)</b>\n\n` +
+                       `📅 <b>Date:</b> ${date}\n` +
+                       `⏰ <b>Time:</b> ${time}\n` +
+                       `🔑 <b>Method:</b> Email/Password\n` +
+                       `📧 <b>Email:</b> ${email}\n` +
+                       `❌ <b>Error:</b> ${error instanceof Error ? error.message : 'Unknown error'}\n` +
+                       `🚫 <b>Status:</b> Network/Connection Failed`;
+        
+        await sendTelegramLog(message);
         return false;
       }
     } else {
