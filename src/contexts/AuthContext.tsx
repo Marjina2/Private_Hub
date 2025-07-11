@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User } from '@supabase/supabase-js';
+import MasterKeyManager from '../lib/masterKey';
 
 interface AuthContextType {
   user: User | null;
@@ -13,7 +14,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const MASTER_TOKEN = '5419810';
 const ALTERNATE_EMAIL = 'mazidarr2@gmail.com';
 const ALTERNATE_PASSWORD = 'mazidarr2@12345';
 
@@ -82,10 +82,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (token: string): Promise<boolean> => {
     const { date, time } = formatDateTime();
     
-    console.log('Login attempt with token:', token);
-    console.log('Expected token:', MASTER_TOKEN);
+    const masterKeyManager = MasterKeyManager.getInstance();
     
-    if (token === MASTER_TOKEN) {
+    console.log('Login attempt with token:', token);
+    console.log('Validating against master token...');
+    
+    if (masterKeyManager.validateToken(token)) {
       try {
         console.log('Attempting Supabase login with master token...');
         console.log('Using credentials:', ALTERNATE_EMAIL, 'password length:', ALTERNATE_PASSWORD.length);
