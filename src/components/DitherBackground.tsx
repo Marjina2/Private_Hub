@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 const DitherBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const frameRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -21,10 +22,17 @@ const DitherBackground: React.FC = () => {
     let animationId: number;
 
     const drawDither = (time: number) => {
+      // Reduce frame rate to 30fps for better performance
+      frameRef.current++;
+      if (frameRef.current % 2 !== 0) {
+        animationId = requestAnimationFrame(drawDither);
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      const dotSize = 2;
-      const spacing = 4;
+      const dotSize = 3;
+      const spacing = 8; // Increased spacing for better performance
       const waveOffset = time * 0.001;
       
       for (let x = 0; x < canvas.width; x += spacing) {
@@ -38,16 +46,12 @@ const DitherBackground: React.FC = () => {
           const wave3 = Math.sin(y * 0.015 + waveOffset * 0.8) * 0.5 + 0.5;
           
           const intensity = (wave1 + wave2 + wave3) / 3;
-          const alpha = intensity * 0.3;
+          const alpha = intensity * 0.2; // Reduced opacity
           
-          if (Math.random() < intensity) {
+          // Reduce random calculations for better performance
+          if (Math.random() < intensity * 0.7) {
             ctx.fillStyle = `rgba(139, 92, 246, ${alpha})`;
             ctx.fillRect(x, y, dotSize, dotSize);
-          }
-          
-          if (Math.random() < intensity * 0.5) {
-            ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 0.7})`;
-            ctx.fillRect(x + 1, y + 1, dotSize - 1, dotSize - 1);
           }
         }
       }
@@ -66,7 +70,7 @@ const DitherBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full opacity-40 dark:opacity-60"
+      className="fixed inset-0 w-full h-full opacity-30 dark:opacity-40"
       style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}
     />
   );

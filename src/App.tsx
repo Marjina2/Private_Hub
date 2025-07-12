@@ -12,6 +12,7 @@ import InstagramApp from './components/InstagramApp';
 import YouTubeApp from './components/YouTubeApp';
 import PhotoGalleryApp from './components/PhotoGalleryApp';
 import OSINTApp from './components/OSINTApp';
+import PDFToolsApp from './components/PDFToolsApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
@@ -27,6 +28,7 @@ function AppRoutes() {
       <Route path="/youtube" element={<YouTubeApp />} />
       <Route path="/photos" element={<PhotoGalleryApp />} />
       <Route path="/osint" element={<OSINTApp />} />
+      <Route path="/pdf-tools" element={<PDFToolsApp />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

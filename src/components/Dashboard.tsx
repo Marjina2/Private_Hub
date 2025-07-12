@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target, FileText } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
@@ -78,6 +78,14 @@ const Dashboard: React.FC = () => {
       icon: Target,
       color: 'from-red-500 to-red-600',
       onClick: () => navigate('/osint')
+    },
+    {
+      id: 'pdf-tools',
+      title: 'PDF Tools',
+      description: 'Merge, split, compress and manipulate PDF files',
+      icon: FileText,
+      color: 'from-red-500 to-orange-600',
+      onClick: () => navigate('/pdf-tools')
     }
   ];
 

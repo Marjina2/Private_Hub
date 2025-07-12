@@ -276,7 +276,7 @@ const SecurityWrapper: React.FC<SecurityWrapperProps> = ({ children }) => {
     const clipboardInterval = setInterval(clearClipboard, 30000);
     
     // Monitor for DevTools every 500ms
-    const devToolsInterval = setInterval(detectDevTools, 500);
+    const devToolsInterval = setInterval(detectDevTools, 2000); // Reduced frequency
     
     // Cleanup
     return () => {
