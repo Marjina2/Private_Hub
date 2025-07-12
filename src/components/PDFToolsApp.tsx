@@ -1,10 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, FileText, Upload, Download, Scissors, Merge, 
-  RotateCw, Image as ImageIcon, Lock, Unlock, Compress,
-  Eye, Trash2, Plus, Search, Calendar, File
-} from 'lucide-react';
+import { ArrowLeft, FileText, Upload, Download, Scissors, Merge, RotateCw, Image as ImageIcon, Lock, Unlock, Compass as Compress, Eye, Trash2, Plus, Search, Calendar, File } from 'lucide-react';
 import Header from './Header';
 
 interface PDFFile {
