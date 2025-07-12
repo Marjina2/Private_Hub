@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import SecurityWrapper from './components/SecurityWrapper';
-import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 import NotesApp from './components/NotesApp';
 import WebsitesApp from './components/WebsitesApp';
@@ -17,12 +15,6 @@ import OSINTApp from './components/OSINTApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
-  const { isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) {
-    return <LoginPage />;
-  }
-
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
@@ -44,16 +36,14 @@ function App() {
   return (
     <SecurityWrapper>
       <ThemeProvider>
-        <AuthProvider>
-          <Router>
-            <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
-              <DitherBackground />
-              <div className="relative z-10">
-                <AppRoutes />
-              </div>
+        <Router>
+          <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
+            <DitherBackground />
+            <div className="relative z-10">
+              <AppRoutes />
             </div>
-          </Router>
-        </AuthProvider>
+          </div>
+        </Router>
       </ThemeProvider>
     </SecurityWrapper>
   );

@@ -1,17 +1,9 @@
 import React from 'react';
 import { Moon, Sun, LogOut, Shield } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
-import { useAuth } from '../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
-  const { logout } = useAuth();
-
-  const handleLogout = async () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      await logout();
-    }
-  };
 
   return (
     <header className="backdrop-blur-lg bg-white/10 dark:bg-black/20 border-b border-white/20">
@@ -32,13 +24,6 @@ const Header: React.FC = () => {
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
 
-          <button
-            onClick={handleLogout}
-            className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-200 hover:text-white transition-colors"
-            title="Logout"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
         </div>
       </div>
     </header>
