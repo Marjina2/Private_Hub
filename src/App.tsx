@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
-import SecurityWrapper from './components/SecurityWrapper';
 import Dashboard from './components/Dashboard';
 import NotesApp from './components/NotesApp';
 import WebsitesApp from './components/WebsitesApp';
@@ -12,6 +11,7 @@ import InstagramApp from './components/InstagramApp';
 import YouTubeApp from './components/YouTubeApp';
 import PhotoGalleryApp from './components/PhotoGalleryApp';
 import OSINTApp from './components/OSINTApp';
+import PDFToolsApp from './components/PDFToolsApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
@@ -36,18 +36,16 @@ function AppRoutes() {
 
 function App() {
   return (
-    <SecurityWrapper>
-      <ThemeProvider>
-        <Router>
-          <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
-            <DitherBackground />
-            <div className="relative z-10">
-              <AppRoutes />
-            </div>
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
+          <DitherBackground />
+          <div className="relative z-10">
+            <AppRoutes />
           </div>
-        </Router>
-      </ThemeProvider>
-    </SecurityWrapper>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
