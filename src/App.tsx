@@ -13,7 +13,6 @@ import YouTubeApp from './components/YouTubeApp';
 import PhotoGalleryApp from './components/PhotoGalleryApp';
 import OSINTApp from './components/OSINTApp';
 import PDFToolsApp from './components/PDFToolsApp';
-import PDFToolsApp from './components/PDFToolsApp';
 import DitherBackground from './components/DitherBackground';
 
 function AppRoutes() {
