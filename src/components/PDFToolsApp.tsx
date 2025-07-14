@@ -272,29 +272,19 @@ const PDFToolsApp: React.FC = () => {
           <div className="lg:col-span-1 backdrop-blur-lg bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4">
             <h2 className="text-lg font-semibold text-white mb-4">PDF Tools</h2>
             
-            {/* Upload */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isProcessing}
-              className="w-full mb-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-2"
-            >
-              <Upload className="w-4 h-4" />
-              Upload PDFs
-            </button>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept=".pdf,application/pdf"
-              onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
-              className="hidden"
-            />
-
-            {/* Batch Operations */}
-            <div className="space-y-2 mb-4">
-              <h3 className="text-sm font-medium text-slate-300">Batch Operations</h3>
+            {/* Core Tools */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">📄 Core Tools</h3>
               
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isProcessing}
+                className="w-full mb-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-2"
+              >
+                <Upload className="w-4 h-4" />
+                Upload PDFs
+              </button>
+
               <button
                 onClick={mergePDFs}
                 disabled={selectedFiles.size < 2 || isProcessing}
@@ -304,6 +294,158 @@ const PDFToolsApp: React.FC = () => {
                 Merge Selected ({selectedFiles.size})
               </button>
             </div>
+
+            {/* Editing Features */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">📝 Editing Features</h3>
+              <div className="grid grid-cols-1 gap-2 text-xs">
+                <div className="p-2 bg-slate-700/30 rounded text-slate-300">
+                  <div className="font-medium text-white mb-1">Text & Images</div>
+                  <div>• Add, edit, delete text</div>
+                  <div>• Insert, resize, move images</div>
+                  <div>• Font matching & styling</div>
+                </div>
+                <div className="p-2 bg-slate-700/30 rounded text-slate-300">
+                  <div className="font-medium text-white mb-1">Annotations</div>
+                  <div>• Highlight, underline, strikethrough</div>
+                  <div>• Comments & sticky notes</div>
+                  <div>• Drawing tools & shapes</div>
+                </div>
+                <div className="p-2 bg-slate-700/30 rounded text-slate-300">
+                  <div className="font-medium text-white mb-1">Redaction</div>
+                  <div>• Permanently remove content</div>
+                  <div>• Secure data protection</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Page Management */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">📄 Page Management</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <button className="px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-xs transition-colors">
+                  Split
+                </button>
+                <button className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs transition-colors">
+                  Reorder
+                </button>
+                <button className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors">
+                  Delete Pages
+                </button>
+                <button className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs transition-colors">
+                  Extract
+                </button>
+                <button className="px-2 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-xs transition-colors">
+                  Rotate
+                </button>
+                <button className="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs transition-colors">
+                  Thumbnails
+                </button>
+              </div>
+            </div>
+
+            {/* Conversion Tools */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">🔄 Conversion</h3>
+              <div className="grid grid-cols-1 gap-1 text-xs">
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  📄 To Word (.docx)
+                </button>
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  📊 To Excel (.xlsx)
+                </button>
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  📈 To PowerPoint (.pptx)
+                </button>
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  🖼️ To Images (JPG/PNG)
+                </button>
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  🌐 To HTML
+                </button>
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  📝 To Text (.txt)
+                </button>
+                <button className="p-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded transition-colors text-left">
+                  🔍 OCR (Text Recognition)
+                </button>
+              </div>
+            </div>
+
+            {/* Security Features */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">🔐 Security</h3>
+              <div className="grid grid-cols-1 gap-1 text-xs">
+                <button className="p-2 bg-red-700/50 hover:bg-red-700 text-red-200 hover:text-white rounded transition-colors text-left">
+                  🔒 Password Protection
+                </button>
+                <button className="p-2 bg-red-700/50 hover:bg-red-700 text-red-200 hover:text-white rounded transition-colors text-left">
+                  🛡️ AES 256-bit Encryption
+                </button>
+                <button className="p-2 bg-red-700/50 hover:bg-red-700 text-red-200 hover:text-white rounded transition-colors text-left">
+                  ✏️ Digital Signatures
+                </button>
+                <button className="p-2 bg-red-700/50 hover:bg-red-700 text-red-200 hover:text-white rounded transition-colors text-left">
+                  💧 Watermarking
+                </button>
+                <button className="p-2 bg-red-700/50 hover:bg-red-700 text-red-200 hover:text-white rounded transition-colors text-left">
+                  ⚙️ Permission Settings
+                </button>
+              </div>
+            </div>
+
+            {/* Forms & Signatures */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">🖊️ Forms & E-Sign</h3>
+              <div className="grid grid-cols-1 gap-1 text-xs">
+                <button className="p-2 bg-blue-700/50 hover:bg-blue-700 text-blue-200 hover:text-white rounded transition-colors text-left">
+                  📝 Fill Forms
+                </button>
+                <button className="p-2 bg-blue-700/50 hover:bg-blue-700 text-blue-200 hover:text-white rounded transition-colors text-left">
+                  ➕ Create Form Fields
+                </button>
+                <button className="p-2 bg-blue-700/50 hover:bg-blue-700 text-blue-200 hover:text-white rounded transition-colors text-left">
+                  ✍️ Digital Signatures
+                </button>
+                <button className="p-2 bg-blue-700/50 hover:bg-blue-700 text-blue-200 hover:text-white rounded transition-colors text-left">
+                  🔗 DocuSign Integration
+                </button>
+              </div>
+            </div>
+
+            {/* Advanced Features */}
+            <div className="space-y-2 mb-6">
+              <h3 className="text-sm font-medium text-slate-300 mb-2">🛠️ Advanced</h3>
+              <div className="grid grid-cols-1 gap-1 text-xs">
+                <button className="p-2 bg-purple-700/50 hover:bg-purple-700 text-purple-200 hover:text-white rounded transition-colors text-left">
+                  📚 Bookmarks & TOC
+                </button>
+                <button className="p-2 bg-purple-700/50 hover:bg-purple-700 text-purple-200 hover:text-white rounded transition-colors text-left">
+                  🔍 Advanced Search
+                </button>
+                <button className="p-2 bg-purple-700/50 hover:bg-purple-700 text-purple-200 hover:text-white rounded transition-colors text-left">
+                  🌙 Night Mode
+                </button>
+                <button className="p-2 bg-purple-700/50 hover:bg-purple-700 text-purple-200 hover:text-white rounded transition-colors text-left">
+                  🔢 Bates Numbering
+                </button>
+                <button className="p-2 bg-purple-700/50 hover:bg-purple-700 text-purple-200 hover:text-white rounded transition-colors text-left">
+                  🤖 Automation/API
+                </button>
+                <button className="p-2 bg-purple-700/50 hover:bg-purple-700 text-purple-200 hover:text-white rounded transition-colors text-left">
+                  📋 Custom Templates
+                </button>
+              </div>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".pdf,application/pdf"
+              onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+              className="hidden"
+            />
 
             {/* Processing Status */}
             {isProcessing && (
