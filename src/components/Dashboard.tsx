@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target, FileText } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target, FileText, Settings } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
