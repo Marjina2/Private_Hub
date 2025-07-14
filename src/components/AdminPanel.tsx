@@ -169,17 +169,47 @@ const AdminPanel: React.FC = () => {
                   />
                 </div>
 
+                <div className="flex items-center gap-2 mb-2">
+                  <input
+                    type="checkbox"
+                    id="useCustomToken"
+                    checked={useCustomToken}
+                    onChange={(e) => setUseCustomToken(e.target.checked)}
+                    className="rounded"
+                  />
+                  <label htmlFor="useCustomToken" className="text-sm text-slate-300">Use custom token</label>
+                </div>
+
+                {useCustomToken && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">
+                      Custom Token *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter your custom token..."
+                      value={customToken}
+                      onChange={(e) => setCustomToken(e.target.value)}
+                      className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Expiry Date (Optional)
+                    Token Expiry
                   </label>
-                  <input
-                    type="datetime-local"
+                  <select
                     value={newTokenExpiry}
                     onChange={(e) => setNewTokenExpiry(e.target.value)}
-                    min={new Date().toISOString().slice(0, 16)}
                     className="w-full p-3 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
+                  >
+                    {expiryOptions.map((option) => (
+                      <option key={option.value} value={option.value} className="bg-slate-800">
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="flex gap-2">
