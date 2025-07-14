@@ -1,9 +1,19 @@
 import React from 'react';
-import { Moon, Sun, LogOut, Shield } from 'lucide-react';
+import { Moon, Sun, LogOut, Shield, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
+  const { logout, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
+  };
 
   return (
     <header className="backdrop-blur-lg bg-white/10 dark:bg-black/20 border-b border-white/20">
@@ -24,6 +34,23 @@ const Header: React.FC = () => {
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
 
+          {isAdmin && (
+            <button
+              onClick={() => navigate('/admin')}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              title="Admin Panel"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          )}
+
+          <button
+            onClick={handleLogout}
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+            title="Logout"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </header>

@@ -86,6 +86,14 @@ const Dashboard: React.FC = () => {
       icon: FileText,
       color: 'from-red-500 to-orange-600',
       onClick: () => navigate('/pdf-tools')
+    },
+    {
+      id: 'admin',
+      title: 'Admin Panel',
+      description: 'Manage master tokens and system settings',
+      icon: Settings,
+      color: 'from-purple-500 to-purple-600',
+      onClick: () => navigate('/admin')
     }
   ];
 

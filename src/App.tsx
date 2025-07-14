@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import AuthPage from './components/AuthPage';
+import AdminPanel from './components/AdminPanel';
 import Dashboard from './components/Dashboard';
 import NotesApp from './components/NotesApp';
 import WebsitesApp from './components/WebsitesApp';
@@ -14,20 +17,28 @@ import OSINTApp from './components/OSINTApp';
 import PDFToolsApp from './components/PDFToolsApp';
 import DitherBackground from './components/DitherBackground';
 
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <AuthPage />;
+}
+
 function AppRoutes() {
+  const { isAuthenticated } = useAuth();
+  
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/notes" element={<NotesApp />} />
-      <Route path="/websites" element={<WebsitesApp />} />
-      <Route path="/todos" element={<TodosApp />} />
-      <Route path="/contacts" element={<ContactsApp />} />
-      <Route path="/discord" element={<DiscordApp />} />
-      <Route path="/instagram" element={<InstagramApp />} />
-      <Route path="/youtube" element={<YouTubeApp />} />
-      <Route path="/photos" element={<PhotoGalleryApp />} />
-      <Route path="/osint" element={<OSINTApp />} />
-      <Route path="/pdf-tools" element={<PDFToolsApp />} />
+      <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+      <Route path="/notes" element={<ProtectedRoute><NotesApp /></ProtectedRoute>} />
+      <Route path="/websites" element={<ProtectedRoute><WebsitesApp /></ProtectedRoute>} />
+      <Route path="/todos" element={<ProtectedRoute><TodosApp /></ProtectedRoute>} />
+      <Route path="/contacts" element={<ProtectedRoute><ContactsApp /></ProtectedRoute>} />
+      <Route path="/discord" element={<ProtectedRoute><DiscordApp /></ProtectedRoute>} />
+      <Route path="/instagram" element={<ProtectedRoute><InstagramApp /></ProtectedRoute>} />
+      <Route path="/youtube" element={<ProtectedRoute><YouTubeApp /></ProtectedRoute>} />
+      <Route path="/photos" element={<ProtectedRoute><PhotoGalleryApp /></ProtectedRoute>} />
+      <Route path="/osint" element={<ProtectedRoute><OSINTApp /></ProtectedRoute>} />
+      <Route path="/pdf-tools" element={<ProtectedRoute><PDFToolsApp /></ProtectedRoute>} />
       <Route path="/pdf-tools" element={<PDFToolsApp />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
@@ -37,14 +48,16 @@ function AppRoutes() {
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
-          <DitherBackground />
-          <div className="relative z-10">
-            <AppRoutes />
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen relative transition-colors duration-300 bg-slate-900 dark:bg-slate-950">
+            <DitherBackground />
+            <div className="relative z-10">
+              <AppRoutes />
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
