@@ -33,7 +33,7 @@ const InstagramApp: React.FC = () => {
 
   const saveContacts = (newContacts: InstagramContact[]) => {
     setContacts(newContacts);
-    localStorage.setItem('private_hub_instagram_contacts', JSON.stringify(newContacts));
+    localStorage.setItem(`private_hub_instagram_contacts_${currentToken}`, JSON.stringify(newContacts));
   };
 
   const createContact = () => {

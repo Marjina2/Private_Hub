@@ -414,7 +414,7 @@ const OSINTApp: React.FC = () => {
 
   const saveSearchHistory = (newHistory: SearchResult[]) => {
     setSearchHistory(newHistory);
-    localStorage.setItem('private_hub_osint_history', JSON.stringify(newHistory));
+    localStorage.setItem(`private_hub_osint_history_${currentToken}`, JSON.stringify(newHistory));
   };
 
   const addToHistory = (tool: string, query: string, result: string, category: string) => {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Search, Edit3, Trash2, Save, X, ExternalLink, Globe, Link as LinkIcon, FileText } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import Header from './Header';
+import ShareComponent from './ShareComponent';
 
 interface Website {
   id: string;
@@ -14,6 +16,7 @@ interface Website {
 
 const WebsitesApp: React.FC = () => {
   const navigate = useNavigate();
+  const { currentToken } = useAuth();
   const [websites, setWebsites] = useState<Website[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedWebsite, setSelectedWebsite] = useState<Website | null>(null);
@@ -21,8 +24,8 @@ const WebsitesApp: React.FC = () => {
   const [editingWebsite, setEditingWebsite] = useState<Partial<Website>>({});
 
   useEffect(() => {
-    // Load websites from localStorage
-    const savedWebsites = localStorage.getItem('private_hub_websites');
+    // Load websites from token-specific localStorage
+    const savedWebsites = localStorage.getItem(`private_hub_websites_${currentToken}`);
     if (savedWebsites) {
       const parsedWebsites = JSON.parse(savedWebsites).map((website: any) => ({
         ...website,
@@ -31,11 +34,11 @@ const WebsitesApp: React.FC = () => {
       }));
       setWebsites(parsedWebsites);
     }
-  }, []);
+  }, [currentToken]);
 
   const saveWebsites = (newWebsites: Website[]) => {
     setWebsites(newWebsites);
-    localStorage.setItem('private_hub_websites', JSON.stringify(newWebsites));
+    localStorage.setItem(`private_hub_websites_${currentToken}`, JSON.stringify(newWebsites));
   };
 
   const createWebsite = () => {
@@ -344,6 +347,7 @@ const WebsitesApp: React.FC = () => {
                 </div>
               </div>
             )}
+            <ShareComponent appType="websites" appName="Websites" />
           </div>
         </div>
       </div>

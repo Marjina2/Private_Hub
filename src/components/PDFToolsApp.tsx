@@ -14,6 +14,7 @@ interface PDFFile {
 
 const PDFToolsApp: React.FC = () => {
   const navigate = useNavigate();
+  const { currentToken } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pdfFiles, setPdfFiles] = useState<PDFFile[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());

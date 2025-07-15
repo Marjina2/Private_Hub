@@ -39,7 +39,7 @@ const YouTubeApp: React.FC = () => {
 
   const saveVideos = (newVideos: YouTubeVideo[]) => {
     setVideos(newVideos);
-    localStorage.setItem('private_hub_youtube_videos', JSON.stringify(newVideos));
+    localStorage.setItem(`private_hub_youtube_videos_${currentToken}`, JSON.stringify(newVideos));
   };
 
   const extractVideoId = (url: string): string => {

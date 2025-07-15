@@ -41,7 +41,7 @@ const ContactsApp: React.FC = () => {
 
   const saveContacts = (newContacts: Contact[]) => {
     setContacts(newContacts);
-    localStorage.setItem('private_hub_contacts', JSON.stringify(newContacts));
+    localStorage.setItem(`private_hub_contacts_${currentToken}`, JSON.stringify(newContacts));
   };
 
   const createContact = () => {

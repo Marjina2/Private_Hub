@@ -106,13 +106,13 @@ const PhotoGalleryApp: React.FC = () => {
   const savePhotos = (newPhotos: Photo[]) => {
     setPhotos(newPhotos);
     // Encrypt data before storing
-    localStorage.setItem('private_hub_photos', btoa(JSON.stringify(newPhotos)));
+    localStorage.setItem(`private_hub_photos_${currentToken}`, btoa(JSON.stringify(newPhotos)));
   };
 
   const saveGroups = (newGroups: PhotoGroup[]) => {
     setGroups(newGroups);
     // Encrypt data before storing
-    localStorage.setItem('private_hub_photo_groups', btoa(JSON.stringify(newGroups)));
+    localStorage.setItem(`private_hub_photo_groups_${currentToken}`, btoa(JSON.stringify(newGroups)));
   };
 
   const createGroup = () => {

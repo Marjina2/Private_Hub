@@ -15,6 +15,7 @@ import YouTubeApp from './components/YouTubeApp';
 import PhotoGalleryApp from './components/PhotoGalleryApp';
 import OSINTApp from './components/OSINTApp';
 import PDFToolsApp from './components/PDFToolsApp';
+import CollaborativeTasksApp from './components/CollaborativeTasksApp';
 import InvitationsPage from './components/InvitationsPage';
 import DitherBackground from './components/DitherBackground';
 
@@ -40,6 +41,7 @@ function AppRoutes() {
       <Route path="/photos" element={<ProtectedRoute><PhotoGalleryApp /></ProtectedRoute>} />
       <Route path="/osint" element={<ProtectedRoute><OSINTApp /></ProtectedRoute>} />
       <Route path="/pdf-tools" element={<ProtectedRoute><PDFToolsApp /></ProtectedRoute>} />
+      <Route path="/team-tasks" element={<ProtectedRoute><CollaborativeTasksApp /></ProtectedRoute>} />
       <Route path="/invitations" element={<ProtectedRoute><InvitationsPage /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

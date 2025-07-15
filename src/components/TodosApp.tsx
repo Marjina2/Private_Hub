@@ -75,12 +75,12 @@ const TodosApp: React.FC = () => {
 
   const saveTodos = (newTodos: Todo[]) => {
     setTodos(newTodos);
-    localStorage.setItem('private_hub_todos', JSON.stringify(newTodos));
+    localStorage.setItem(`private_hub_todos_${currentToken}`, JSON.stringify(newTodos));
   };
 
   const saveGroups = (newGroups: TodoGroup[]) => {
     setGroups(newGroups);
-    localStorage.setItem('private_hub_todo_groups', JSON.stringify(newGroups));
+    localStorage.setItem(`private_hub_todo_groups_${currentToken}`, JSON.stringify(newGroups));
   };
 
   const createGroup = () => {

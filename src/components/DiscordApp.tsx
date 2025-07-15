@@ -33,7 +33,7 @@ const DiscordApp: React.FC = () => {
 
   const saveContacts = (newContacts: DiscordContact[]) => {
     setContacts(newContacts);
-    localStorage.setItem('private_hub_discord_contacts', JSON.stringify(newContacts));
+    localStorage.setItem(`private_hub_discord_contacts_${currentToken}`, JSON.stringify(newContacts));
   };
 
   const createContact = () => {
