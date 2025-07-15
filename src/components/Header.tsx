@@ -1,12 +1,12 @@
 import React from 'react';
-import { Moon, Sun, LogOut, Shield, Settings } from 'lucide-react';
+import { Moon, Sun, LogOut, Shield, Settings, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 
 const Header: React.FC = () => {
   const { isDark, toggleTheme } = useTheme();
-  const { logout, isAdmin } = useAuth();
+  const { logout, isAdmin, currentUser, pendingInvitations } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {

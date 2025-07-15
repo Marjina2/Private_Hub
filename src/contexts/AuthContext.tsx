@@ -42,6 +42,7 @@ interface AuthContextType {
   sendShareInvitation: (toToken: string, appType: string, message: string) => boolean;
   respondToInvitation: (invitationId: string, response: 'accepted' | 'rejected') => void;
   getInvitationsForCurrentUser: () => ShareInvitation[];
+  pendingInvitations: ShareInvitation[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -306,6 +307,78 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }).catch(() => {});
   };
 
+  const sendShareInvitation = (toToken: string, appType: string, message: string): boolean => {
+    if (!currentToken) return false;
+    
+    // Check if target token exists
+    const targetExists = toToken === DEFAULT_MASTER_TOKEN || 
+                        masterTokens.some(t => t.token === toToken && t.isActive);
+    
+    if (!targetExists) return false;
+    
+    // Check for existing pending invitation
+    const existingInvitation = shareInvitations.find(inv => 
+      inv.fromToken === currentToken && 
+      inv.toToken === toToken && 
+      inv.appType === appType && 
+      inv.status === 'pending'
+    );
+    
+    if (existingInvitation) return false;
+    
+    const newInvitation: ShareInvitation = {
+      id: Date.now().toString(),
+      fromToken: currentToken,
+      toToken,
+      appType,
+      message,
+      status: 'pending',
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    };
+    
+    const newInvitations = [...shareInvitations, newInvitation];
+    saveInvitations(newInvitations);
+    
+    // Log invitation
+    logToTelegram('SHARE_INVITATION_SENT', currentToken, 
+      `To: ${toToken.substring(0, 4)}****, App: ${appType}`);
+    
+    return true;
+  };
+
+  const respondToInvitation = (invitationId: string, response: 'accepted' | 'rejected') => {
+    const invitation = shareInvitations.find(inv => inv.id === invitationId);
+    if (!invitation || invitation.toToken !== currentToken) return;
+    
+    const updatedInvitations = shareInvitations.map(inv => 
+      inv.id === invitationId ? { ...inv, status: response } : inv
+    );
+    saveInvitations(updatedInvitations);
+    
+    // Log response
+    logToTelegram(`INVITATION_${response.toUpperCase()}`, currentToken, 
+      `From: ${invitation.fromToken.substring(0, 4)}****, App: ${invitation.appType}`);
+    
+    // If accepted, merge data (implementation depends on app type)
+    if (response === 'accepted') {
+      // TODO: Implement data merging logic for each app type
+      console.log(`Merging ${invitation.appType} data between ${invitation.fromToken} and ${invitation.toToken}`);
+    }
+  };
+
+  const getInvitationsForCurrentUser = (): ShareInvitation[] => {
+    if (!currentToken) return [];
+    
+    return shareInvitations.filter(inv => 
+      inv.toToken === currentToken && 
+      inv.status === 'pending' &&
+      inv.expiresAt > new Date()
+    );
+  };
+
+  const pendingInvitations = getInvitationsForCurrentUser();
+
   const isAdmin = currentToken === DEFAULT_MASTER_TOKEN;
 
   return (
@@ -323,7 +396,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       shareInvitations,
       sendShareInvitation,
       respondToInvitation,
-      getInvitationsForCurrentUser
+      getInvitationsForCurrentUser,
+      pendingInvitations
     }}>
       {children}
     </AuthContext.Provider>
