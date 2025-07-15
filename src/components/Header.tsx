@@ -22,10 +22,29 @@ const Header: React.FC = () => {
           <div className="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg">
             <Shield className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-white">Private Hub</h1>
+          <div>
+            <h1 className="text-xl font-bold text-white">Private Hub</h1>
+            {currentUser && (
+              <p className="text-xs text-slate-300">Welcome, {currentUser.name}</p>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center space-x-3">
+          {/* Notifications */}
+          {pendingInvitations.length > 0 && (
+            <button
+              onClick={() => navigate('/invitations')}
+              className="relative p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              title={`${pendingInvitations.length} pending invitation(s)`}
+            >
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {pendingInvitations.length}
+              </span>
+            </button>
+          )}
+
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"

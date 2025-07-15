@@ -10,9 +10,27 @@ interface MasterToken {
   createdBy: string;
 }
 
+interface ShareInvitation {
+  id: string;
+  fromToken: string;
+  toToken: string;
+  appType: string;
+  message: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: Date;
+  expiresAt: Date;
+}
+
+interface User {
+  id: string;
+  token: string;
+  name: string;
+  createdAt: Date;
+}
 interface AuthContextType {
   isAuthenticated: boolean;
   currentToken: string | null;
+  currentUser: User | null;
   login: (token: string) => boolean;
   logout: () => void;
   isAdmin: boolean;
@@ -20,6 +38,10 @@ interface AuthContextType {
   createMasterToken: (name: string, expiresAt: Date | null, customToken?: string) => string;
   deleteMasterToken: (tokenId: string) => void;
   toggleTokenStatus: (tokenId: string) => void;
+  shareInvitations: ShareInvitation[];
+  sendShareInvitation: (toToken: string, appType: string, message: string) => boolean;
+  respondToInvitation: (invitationId: string, response: 'accepted' | 'rejected') => void;
+  getInvitationsForCurrentUser: () => ShareInvitation[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,7 +49,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentToken, setCurrentToken] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [masterTokens, setMasterTokens] = useState<MasterToken[]>([]);
+  const [shareInvitations, setShareInvitations] = useState<ShareInvitation[]>([]);
 
   // Default master token
   const DEFAULT_MASTER_TOKEN = '5419810';
@@ -48,6 +72,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // Load share invitations
+    const savedInvitations = localStorage.getItem('private_hub_share_invitations');
+    if (savedInvitations) {
+      try {
+        const parsedInvitations = JSON.parse(atob(savedInvitations)).map((inv: any) => ({
+          ...inv,
+          createdAt: new Date(inv.createdAt),
+          expiresAt: new Date(inv.expiresAt)
+        }));
+        setShareInvitations(parsedInvitations);
+      } catch (error) {
+        console.error('Failed to load share invitations:', error);
+      }
+    }
     // Check if user is already authenticated
     const savedAuth = localStorage.getItem('private_hub_auth');
     if (savedAuth) {
@@ -56,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (authData.token && authData.expiresAt && new Date(authData.expiresAt) > new Date()) {
           setIsAuthenticated(true);
           setCurrentToken(authData.token);
+          setCurrentUser(getUserFromToken(authData.token));
         } else {
           localStorage.removeItem('private_hub_auth');
         }
@@ -70,6 +109,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('private_hub_master_tokens', btoa(JSON.stringify(tokens)));
   };
 
+  const saveInvitations = (invitations: ShareInvitation[]) => {
+    setShareInvitations(invitations);
+    localStorage.setItem('private_hub_share_invitations', btoa(JSON.stringify(invitations)));
+  };
+
+  const getUserFromToken = (token: string): User => {
+    if (token === DEFAULT_MASTER_TOKEN) {
+      return {
+        id: 'master',
+        token: token,
+        name: 'Master Admin',
+        createdAt: new Date('2024-01-01')
+      };
+    }
+
+    const foundToken = masterTokens.find(t => t.token === token);
+    if (foundToken) {
+      return {
+        id: foundToken.id,
+        token: foundToken.token,
+        name: foundToken.name,
+        createdAt: foundToken.createdAt
+      };
+    }
+
+    return {
+      id: 'unknown',
+      token: token,
+      name: 'Unknown User',
+      createdAt: new Date()
+    };
+  };
   const isValidToken = (token: string): boolean => {
     // Check default master token
     if (token === DEFAULT_MASTER_TOKEN) {
@@ -90,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isValidToken(token)) {
       setIsAuthenticated(true);
       setCurrentToken(token);
+      setCurrentUser(getUserFromToken(token));
       
       // Save auth state with 24 hour expiry
       const expiresAt = new Date();
@@ -116,6 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setIsAuthenticated(false);
     setCurrentToken(null);
+    setCurrentUser(null);
     localStorage.removeItem('private_hub_auth');
     
     // Log logout
@@ -233,19 +306,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }).catch(() => {});
   };
 
-  const isAdmin = currentToken === DEFAULT_MASTER_TOKEN || isAuthenticated;
+  const isAdmin = currentToken === DEFAULT_MASTER_TOKEN;
 
   return (
     <AuthContext.Provider value={{
       isAuthenticated,
       currentToken,
+      currentUser,
       login,
       logout,
       isAdmin,
       masterTokens,
       createMasterToken,
       deleteMasterToken,
-      toggleTokenStatus
+      toggleTokenStatus,
+      shareInvitations,
+      sendShareInvitation,
+      respondToInvitation,
+      getInvitationsForCurrentUser
     }}>
       {children}
     </AuthContext.Provider>

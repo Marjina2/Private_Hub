@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Search, Edit3, Trash2, Save, X, Calendar, Tag } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import Header from './Header';
+import ShareComponent from './ShareComponent';
 
 interface Note {
   id: string;
@@ -16,6 +16,7 @@ interface Note {
 
 const NotesApp: React.FC = () => {
   const navigate = useNavigate();
+  const { currentToken } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
@@ -23,8 +24,8 @@ const NotesApp: React.FC = () => {
   const [editingNote, setEditingNote] = useState<Partial<Note>>({});
 
   useEffect(() => {
-    // Load notes from localStorage
-    const savedNotes = localStorage.getItem('private_hub_notes');
+    // Load notes from token-specific localStorage
+    const savedNotes = localStorage.getItem(`private_hub_notes_${currentToken}`);
     if (savedNotes) {
       const parsedNotes = JSON.parse(savedNotes).map((note: any) => ({
         ...note,
@@ -33,11 +34,11 @@ const NotesApp: React.FC = () => {
       }));
       setNotes(parsedNotes);
     }
-  }, []);
+  }, [currentToken]);
 
   const saveNotes = (newNotes: Note[]) => {
     setNotes(newNotes);
-    localStorage.setItem('private_hub_notes', JSON.stringify(newNotes));
+    localStorage.setItem(`private_hub_notes_${currentToken}`, JSON.stringify(newNotes));
   };
 
   const createNote = () => {
@@ -118,7 +119,10 @@ const NotesApp: React.FC = () => {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-3xl font-bold text-white">Notes</h1>
+          <div className="flex items-center justify-between w-full">
+            <h1 className="text-3xl font-bold text-white">Notes</h1>
+            <ShareComponent appType="notes" appName="Notes" />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
