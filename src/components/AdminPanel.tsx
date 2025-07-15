@@ -14,8 +14,21 @@ const AdminPanel: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [newTokenName, setNewTokenName] = useState('');
   const [newTokenExpiry, setNewTokenExpiry] = useState('');
+  const [useCustomToken, setUseCustomToken] = useState(false);
+  const [customToken, setCustomToken] = useState('');
   const [showTokens, setShowTokens] = useState<Set<string>>(new Set());
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
+
+  const expiryOptions = [
+    { value: '', label: 'Never expires' },
+    { value: '10m', label: '10 Minutes' },
+    { value: '1h', label: '1 Hour' },
+    { value: '3h', label: '3 Hours' },
+    { value: '10h', label: '10 Hours' },
+    { value: '1d', label: '1 Day' },
+    { value: '2d', label: '2 Days' },
+    { value: '10d', label: '10 Days' }
+  ];
 
   const handleCreateToken = () => {
     if (!newTokenName.trim()) {
@@ -23,16 +36,55 @@ const AdminPanel: React.FC = () => {
       return;
     }
 
-    const expiresAt = newTokenExpiry ? new Date(newTokenExpiry) : null;
+    if (useCustomToken && !customToken.trim()) {
+      alert('Please enter a custom token');
+      return;
+    }
+
+    // Check if custom token already exists
+    if (useCustomToken && (customToken === '5419810' || masterTokens.some(t => t.token === customToken))) {
+      alert('This token already exists');
+      return;
+    }
+
+    let expiresAt: Date | null = null;
+    if (newTokenExpiry) {
+      const now = new Date();
+      switch (newTokenExpiry) {
+        case '10m':
+          expiresAt = new Date(now.getTime() + 10 * 60 * 1000);
+          break;
+        case '1h':
+          expiresAt = new Date(now.getTime() + 60 * 60 * 1000);
+          break;
+        case '3h':
+          expiresAt = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+          break;
+        case '10h':
+          expiresAt = new Date(now.getTime() + 10 * 60 * 60 * 1000);
+          break;
+        case '1d':
+          expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+          break;
+        case '2d':
+          expiresAt = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+          break;
+        case '10d':
+          expiresAt = new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000);
+          break;
+      }
+    }
     
     if (expiresAt && expiresAt <= new Date()) {
       alert('Expiry date must be in the future');
       return;
     }
 
-    const token = createMasterToken(newTokenName.trim(), expiresAt);
+    const token = createMasterToken(newTokenName.trim(), expiresAt, useCustomToken ? customToken.trim() : undefined);
     setNewTokenName('');
     setNewTokenExpiry('');
+    setUseCustomToken(false);
+    setCustomToken('');
     setIsCreating(false);
     
     // Auto-show the newly created token
@@ -224,6 +276,8 @@ const AdminPanel: React.FC = () => {
                       setIsCreating(false);
                       setNewTokenName('');
                       setNewTokenExpiry('');
+                      setUseCustomToken(false);
+                      setCustomToken('');
                     }}
                     className="flex-1 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
                   >

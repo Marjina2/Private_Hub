@@ -17,7 +17,7 @@ interface AuthContextType {
   logout: () => void;
   isAdmin: boolean;
   masterTokens: MasterToken[];
-  createMasterToken: (name: string, expiresAt: Date | null) => string;
+  createMasterToken: (name: string, expiresAt: Date | null, customToken?: string) => string;
   deleteMasterToken: (tokenId: string) => void;
   toggleTokenStatus: (tokenId: string) => void;
 }
@@ -124,8 +124,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const createMasterToken = (name: string, expiresAt: Date | null): string => {
-    const newToken = generateToken();
+  const createMasterToken = (name: string, expiresAt: Date | null, customToken?: string): string => {
+    const newToken = customToken || generateToken();
     const masterToken: MasterToken = {
       id: Date.now().toString(),
       token: newToken,
