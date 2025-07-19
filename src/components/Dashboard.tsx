@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target, FileText } from 'lucide-react';
+import { StickyNote, Plus, Grid3x3, Globe, CheckSquare, Users, Hash, Instagram, Youtube, Image as ImageIcon, Target, FileText, BookOpen } from 'lucide-react';
 import Header from './Header';
 
 const Dashboard: React.FC = () => {
@@ -94,6 +94,14 @@ const Dashboard: React.FC = () => {
       icon: Users,
       color: 'from-emerald-500 to-teal-600',
       onClick: () => navigate('/team-tasks')
+    },
+    {
+      id: 'documents',
+      title: 'Documents',
+      description: 'Rich document editor with blocks, similar to Notion',
+      icon: BookOpen,
+      color: 'from-violet-500 to-purple-600',
+      onClick: () => navigate('/documents')
     }
   ];
 
